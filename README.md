@@ -1,6 +1,6 @@
 # S3MultipartUpload
 
-A client-side library for uploading very large files to S3.
+A library for uploading very large files to S3.
 
 ## Installation
 
