@@ -52,7 +52,7 @@ do ($, _, Bacon) ->
         _start += partSize
         slice data, currStart, currEnd
 
-      _(_.range(1, parts.length + 1)).zip(parts)
+      _.zip _.range(1, parts.length + 1), parts
 
     signRequest = ({data, onSuccess, onError}) ->
       $.ajax
@@ -150,7 +150,7 @@ do ($, _, Bacon) ->
       Bacon.mergeAll(_queued, _progress, _success, _error, _signError).toProperty(waiting: true, start: _start)
 
     uploadParts = (parts, objectPath, uploadId) ->
-      uploads = _(parts).map (part) -> prepareForUpload(part, objectPath, uploadId)
+      uploads = _.map parts, (part) -> prepareForUpload(part, objectPath, uploadId)
 
       bitrateEstimator.init()
 
@@ -164,16 +164,16 @@ do ($, _, Bacon) ->
         concurrencyLevel = if concurrent then MAX_CONCURRENT_PARTS_UPLOAD else 1
 
         if failed.length
-          _.delay _(failed).first().retry, 1000
+          _.delay _.first(failed).retry, 1000
         else if waiting.length and (queued.length + uploading.length) < concurrencyLevel
-          _(waiting).first().start()
+          _.first(waiting).start()
 
         if complete.length is parts.length
           complete: true
           parts: parts
         else if uploading.length
-          uploaded = _(uploading).reduce(((s, x) -> s + x.uploaded), 0) + _(complete).reduce(((s,x) -> s + x.part.data.size), 0)
-          total = _(parts).reduce(((s,x) -> s + x.data.size), 0)
+          uploaded = _.reduce(uploading, ((s, x) -> s + x.uploaded), 0) + _.reduce(complete, ((s,x) -> s + x.part.data.size), 0)
+          total = _.reduce(parts, ((s,x) -> s + x.data.size), 0)
           uploadSpeed = bitrateEstimator.compute uploaded
 
           uploading: true
@@ -187,12 +187,13 @@ do ($, _, Bacon) ->
       relativeUrl = "#{objectPath}?uploadId=#{uploadId}"
       absoluteUrl = "#{host}#{relativeUrl}"
 
-      partsXml = _(parts)
+      partsXml = _.chain(parts)
         .sortBy (p) ->
           p.key
         .map (p) ->
           "<Part><PartNumber>#{p.key}</PartNumber><ETag>#{p.etag}</ETag></Part>"
         .reduce ((s, xml) -> s + xml), ""
+        .value()
 
       payload = "<CompleteMultipartUpload>#{partsXml}</CompleteMultipartUpload>"
 
@@ -233,7 +234,7 @@ do ($, _, Bacon) ->
 
     upload = (file) ->
       partSize = computePartSize file.size
-      parts = _(splitIntoParts(file, partSize)).map (part) -> key: part[0], data: part[1]
+      parts = _.map splitIntoParts(file, partSize), (part) -> key: part[0], data: part[1]
 
       sanitizedFileName = file.name.replace(/[^0-9a-z.]/gi, "_").toLowerCase()
 
