@@ -6,7 +6,7 @@ module S3MultipartUpload
     end
 
     def split_into_parts(part_size)
-      boundaries = Range.new(0, file_size).step(part_size).tap do |_|
+      boundaries = Range.new(0, file_size).step(part_size).to_a.tap do |_|
         _.push(file_size) unless _.last == file_size
       end
 
