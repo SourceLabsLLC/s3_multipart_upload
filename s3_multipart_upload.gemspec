@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.files         = Dir["config/**/*", "lib/**/*.rb", "app/**/*", "LICENSE.txt", "README.md"]
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "aws-sdk"
+  spec.add_dependency "aws-sdk", "< 2.0"
   spec.add_dependency "google-api-client"
   spec.add_dependency "railties"
   spec.add_dependency "coffee-script"
