@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "aws-sdk-v1"
-  spec.add_dependency "google-api-client"
+  spec.add_dependency "google-api-client", "~> 0.8.6"
   spec.add_dependency "railties"
   spec.add_dependency "coffee-script"
 
