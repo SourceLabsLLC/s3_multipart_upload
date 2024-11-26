@@ -1,4 +1,4 @@
-require 'aws/s3'
+require 'aws-sdk-s3'
 require 'active_support/core_ext/numeric/bytes'
 
 module S3MultipartUpload
