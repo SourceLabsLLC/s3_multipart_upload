@@ -11,7 +11,7 @@ module S3MultipartUpload
         part_size = compute_part_size file.file_size
         parts = file.split_into_parts(part_size)
 
-        s3_object = s3_bucket.objects[path]
+        s3_object = s3_bucket.object(path)
 
         s3_object.multipart_upload(acl: :public_read, content_type: file.mime_type) do |upload|
           parts.each do |part|
@@ -29,8 +29,8 @@ module S3MultipartUpload
       end
 
       def s3_bucket
-        s3 = AWS::S3.new access_key_id: s3_config.key, secret_access_key: s3_config.secret
-        s3.buckets[s3_config.bucket_name]
+        s3 = Aws::S3::Resource.new access_key_id: s3_config.key, secret_access_key: s3_config.secret
+        s3.bucket(s3_config.bucket_name)
       end
 
       def compute_part_size(size)
