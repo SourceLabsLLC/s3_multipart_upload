@@ -14,9 +14,12 @@ Gem::Specification.new do |spec|
 
   spec.license       = "MIT"
 
+  spec.required_ruby_version = ">= 3.0.0"
+
   spec.files         = Dir["config/**/*", "lib/**/*.rb", "app/**/*", "LICENSE.txt", "README.md"]
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "addressable"
   spec.add_dependency "aws-sdk-s3"
   spec.add_dependency "google-api-client", "~> 0.8.6"
   spec.add_dependency "railties"

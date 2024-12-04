@@ -1,3 +1,5 @@
+require 'addressable/uri'
+
 module S3MultipartUpload
   class SignaturesController < ApplicationController
     def generate
@@ -14,7 +16,7 @@ module S3MultipartUpload
         #{params[:content_type]}
 
         x-amz-date:#{time}
-        /#{s3_config.bucket_name}#{URI::escape(params[:url])}
+        /#{s3_config.bucket_name}#{Addressable::URI.encode(params[:url])}
       REQUEST
 
       signature = Base64.strict_encode64(OpenSSL::HMAC.digest('sha1', s3_config.secret, unsigned_request))
